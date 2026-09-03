@@ -1,2 +1,1 @@
-# flutter
-BCITE
+# Hotel Booking flutter frontend project
