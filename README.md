@@ -1,6 +1,6 @@
 # Campus Event Finder
 
-Flutter graduation project by **Layan Diab** (Al-Quds / Abu Dis).
+Flutter graduation project by LAYAN DIAB (Al-Quds / Abu Dis).
 
 University students can discover campus events, save favorites, and register in one flow.
 
