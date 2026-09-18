@@ -31,7 +31,7 @@ class ProfileScreen extends StatelessWidget {
                   icon: Icons.favorite,
                   value: favCount,
                   label: t('favorites'),
-                  color: Colors.redAccent,
+                  color: const Color(0xFFFF6B8A),
                 )),
                 const SizedBox(width: 12),
                 Expanded(
@@ -39,7 +39,7 @@ class ProfileScreen extends StatelessWidget {
                   icon: Icons.event_available,
                   value: regCount,
                   label: t('my_events'),
-                  color: Colors.green,
+                  color: const Color(0xFF2DD4BF),
                 )),
               ],
             ),
@@ -91,10 +91,10 @@ class ProfileScreen extends StatelessWidget {
           const Divider(),
 
           // ── App info ───────────────────────────────────────────────────
-          ListTile(
-            leading: const Icon(Icons.info_outline),
-            title: const Text('Campus Event Finder'),
-            subtitle: const Text('v1.0.0 · Layan Diab · Al-Quds Abu Dis'),
+          const ListTile(
+            leading: Icon(Icons.info_outline),
+            title: Text('Campus Event Finder'),
+            subtitle: Text('v1.0.0 · Layan Diab · Al-Quds Abu Dis'),
           ),
         ],
       ),
@@ -116,23 +116,27 @@ class _StatCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
-        child: Column(
-          children: [
-            Icon(icon, color: color, size: 28),
-            const SizedBox(height: 6),
-            Text(value.toString(),
-                style: Theme.of(context)
-                    .textTheme
-                    .headlineSmall
-                    ?.copyWith(fontWeight: FontWeight.bold)),
-            Text(label,
-                style: Theme.of(context).textTheme.bodySmall,
-                textAlign: TextAlign.center),
-          ],
-        ),
+    final scheme = Theme.of(context).colorScheme;
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 8),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        color: scheme.surfaceContainerHigh.withValues(alpha: 0.85),
+        border: Border.all(color: color.withValues(alpha: 0.35)),
+      ),
+      child: Column(
+        children: [
+          Icon(icon, color: color, size: 28),
+          const SizedBox(height: 6),
+          Text(value.toString(),
+              style: Theme.of(context)
+                  .textTheme
+                  .headlineSmall
+                  ?.copyWith(fontWeight: FontWeight.w800)),
+          Text(label,
+              style: Theme.of(context).textTheme.bodySmall,
+              textAlign: TextAlign.center),
+        ],
       ),
     );
   }
@@ -156,7 +160,7 @@ class _LangButton extends StatelessWidget {
         decoration: BoxDecoration(
           color: selected
               ? Theme.of(context).colorScheme.primary
-              : Theme.of(context).colorScheme.surfaceVariant,
+              : Theme.of(context).colorScheme.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(20),
         ),
         child: Text(

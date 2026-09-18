@@ -73,8 +73,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void _openDetails(BuildContext context, Event event) {
     Navigator.push(
       context,
-      MaterialPageRoute(
-          builder: (_) => EventDetailsScreen(event: event)),
+      MaterialPageRoute(builder: (_) => EventDetailsScreen(event: event)),
     );
   }
 
@@ -82,177 +81,187 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final lang = context.watch<LanguageProvider>();
     final t = lang.t;
+    final scheme = Theme.of(context).colorScheme;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(t('app_title')),
-        centerTitle: true,
-      ),
-      body: Column(
-        children: [
-          // ── Search bar ───────────────────────────────────────────────────
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
-            child: Column(
-              children: [
-                TextField(
-                  controller: _searchController,
-                  textInputAction: TextInputAction.search,
-                  onSubmitted: _onSearch,
-                  decoration: InputDecoration(
-                    hintText: t('search_hint'),
-                    prefixIcon: const Icon(Icons.search),
-                    suffixIcon: _searchController.text.isNotEmpty
-                        ? IconButton(
-                            icon: const Icon(Icons.clear),
-                            onPressed: () {
-                              _searchController.clear();
-                              _onSearch();
-                            },
-                          )
-                        : null,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30)),
-                    contentPadding:
-                        const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
+      body: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 12, 20, 4),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    t('app_title'),
+                    style: Theme.of(context).textTheme.headlineSmall,
                   ),
-                  onChanged: (_) => setState(() {}),
-                ),
-                const SizedBox(height: 8),
-                TextField(
-                  controller: _cityController,
-                  textInputAction: TextInputAction.search,
-                  onSubmitted: _onSearch,
-                  decoration: InputDecoration(
-                    hintText: t('city_hint'),
-                    prefixIcon: const Icon(Icons.location_city_outlined),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30)),
-                    contentPadding:
-                        const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
+                  const SizedBox(height: 4),
+                  Text(
+                    t('tagline'),
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: scheme.onSurfaceVariant,
+                        ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-
-          // ── Category chips ───────────────────────────────────────────────
-          SizedBox(
-            height: 44,
-            child: ListView.separated(
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              itemCount: _categories.length,
-              separatorBuilder: (_, __) => const SizedBox(width: 8),
-              itemBuilder: (_, i) {
-                final cat = _categories[i];
-                final label = cat == 'All' ? t('all') : cat;
-                final selected = _selectedCategory == cat;
-                return ChoiceChip(
-                  label: Text(label),
-                  selected: selected,
-                  onSelected: (_) => _onCategoryTap(cat),
-                );
-              },
-            ),
-          ),
-
-          // ── Event list ───────────────────────────────────────────────────
-          Expanded(
-            child: FutureBuilder<List<Event>>(
-              future: _eventsFuture,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-
-                if (snapshot.hasError) {
-                  final msg = snapshot.error is ApiException
-                      ? snapshot.error.toString()
-                      : t('error_network');
-                  return Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(24),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Icon(Icons.wifi_off, size: 48),
-                          const SizedBox(height: 12),
-                          Text(msg, textAlign: TextAlign.center),
-                          const SizedBox(height: 16),
-                          ElevatedButton.icon(
-                            onPressed: _load,
-                            icon: const Icon(Icons.refresh),
-                            label: Text(t('retry')),
-                          ),
-                        ],
-                      ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+              child: Column(
+                children: [
+                  TextField(
+                    controller: _searchController,
+                    textInputAction: TextInputAction.search,
+                    onSubmitted: _onSearch,
+                    decoration: InputDecoration(
+                      hintText: t('search_hint'),
+                      prefixIcon: const Icon(Icons.search),
+                      suffixIcon: _searchController.text.isNotEmpty
+                          ? IconButton(
+                              icon: const Icon(Icons.clear),
+                              onPressed: () {
+                                _searchController.clear();
+                                _onSearch();
+                              },
+                            )
+                          : null,
                     ),
+                    onChanged: (_) => setState(() {}),
+                  ),
+                  const SizedBox(height: 10),
+                  TextField(
+                    controller: _cityController,
+                    textInputAction: TextInputAction.search,
+                    onSubmitted: _onSearch,
+                    decoration: InputDecoration(
+                      hintText: t('city_hint'),
+                      prefixIcon: const Icon(Icons.near_me_outlined),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 48,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                itemCount: _categories.length,
+                separatorBuilder: (_, __) => const SizedBox(width: 8),
+                itemBuilder: (_, i) {
+                  final cat = _categories[i];
+                  final label = cat == 'All' ? t('all') : cat;
+                  final selected = _selectedCategory == cat;
+                  return ChoiceChip(
+                    label: Text(label),
+                    selected: selected,
+                    showCheckmark: false,
+                    labelStyle: TextStyle(
+                      color: selected ? scheme.onPrimary : scheme.onSurface,
+                      fontWeight: FontWeight.w700,
+                    ),
+                    selectedColor: scheme.primary,
+                    backgroundColor: scheme.surfaceContainerHighest
+                        .withValues(alpha: 0.7),
+                    onSelected: (_) => _onCategoryTap(cat),
                   );
-                }
+                },
+              ),
+            ),
+            Expanded(
+              child: FutureBuilder<List<Event>>(
+                future: _eventsFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(
+                      child: CircularProgressIndicator(color: scheme.primary),
+                    );
+                  }
 
-                final events = snapshot.data ?? [];
-
-                if (events.isEmpty) {
-                  return Center(
-                    child: Text(t('no_events'),
-                        style: Theme.of(context).textTheme.bodyLarge),
-                  );
-                }
-
-                return ListView.builder(
-                  padding: const EdgeInsets.only(bottom: 16),
-                  itemCount: events.length,
-                  itemBuilder: (context, index) {
-                    final event = events[index];
-
-                    if (index == 0) {
-                      // First card = featured (bigger)
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding:
-                                const EdgeInsets.fromLTRB(16, 8, 16, 4),
-                            child: Text(
-                              t('featured'),
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleSmall
-                                  ?.copyWith(fontWeight: FontWeight.bold),
+                  if (snapshot.hasError) {
+                    final msg = snapshot.error is ApiException
+                        ? snapshot.error.toString()
+                        : t('error_network');
+                    return Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(24),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.wifi_off, size: 48, color: scheme.primary),
+                            const SizedBox(height: 12),
+                            Text(msg, textAlign: TextAlign.center),
+                            const SizedBox(height: 16),
+                            FilledButton.icon(
+                              onPressed: _load,
+                              icon: const Icon(Icons.refresh),
+                              label: Text(t('retry')),
                             ),
-                          ),
-                          EventCard(
-                            event: event,
-                            featured: true,
-                            onTap: () => _openDetails(context, event),
-                          ),
-                          if (events.length > 1)
+                          ],
+                        ),
+                      ),
+                    );
+                  }
+
+                  final events = snapshot.data ?? [];
+
+                  if (events.isEmpty) {
+                    return Center(
+                      child: Text(
+                        t('no_events'),
+                        style: Theme.of(context).textTheme.bodyLarge,
+                      ),
+                    );
+                  }
+
+                  return ListView.builder(
+                    padding: const EdgeInsets.only(top: 8, bottom: 20),
+                    itemCount: events.length,
+                    itemBuilder: (context, index) {
+                      final event = events[index];
+
+                      if (index == 0) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
                             Padding(
-                              padding:
-                                  const EdgeInsets.fromLTRB(16, 12, 16, 4),
+                              padding: const EdgeInsets.fromLTRB(20, 8, 16, 0),
                               child: Text(
-                                t('upcoming'),
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleSmall
-                                    ?.copyWith(fontWeight: FontWeight.bold),
+                                t('featured').toUpperCase(),
+                                style: Theme.of(context).textTheme.titleSmall,
                               ),
                             ),
-                        ],
-                      );
-                    }
+                            EventCard(
+                              event: event,
+                              featured: true,
+                              onTap: () => _openDetails(context, event),
+                            ),
+                            if (events.length > 1)
+                              Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(20, 12, 16, 4),
+                                child: Text(
+                                  t('upcoming').toUpperCase(),
+                                  style: Theme.of(context).textTheme.titleSmall,
+                                ),
+                              ),
+                          ],
+                        );
+                      }
 
-                    return EventCard(
-                      event: event,
-                      onTap: () => _openDetails(context, event),
-                    );
-                  },
-                );
-              },
+                      return EventCard(
+                        event: event,
+                        onTap: () => _openDetails(context, event),
+                      );
+                    },
+                  );
+                },
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

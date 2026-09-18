@@ -22,7 +22,9 @@ class MyEventsScreen extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(Icons.event_busy, size: 64, color: Colors.grey),
+                  Icon(Icons.event_busy,
+                      size: 64,
+                      color: Theme.of(context).colorScheme.primary),
                   const SizedBox(height: 16),
                   Text(
                     t('no_registered'),
@@ -39,15 +41,14 @@ class MyEventsScreen extends StatelessWidget {
               itemBuilder: (context, index) {
                 final event = registered[index];
                 return Card(
-                  clipBehavior: Clip.antiAlias,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
                   child: ListTile(
-                    contentPadding: EdgeInsets.zero,
-                    leading: SizedBox(
-                      width: 80,
+                    contentPadding: const EdgeInsets.all(8),
+                    leading: ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
                       child: CachedNetworkImage(
                         imageUrl: event.imageUrl,
+                        width: 72,
+                        height: 72,
                         fit: BoxFit.cover,
                         errorWidget: (_, __, ___) =>
                             const Icon(Icons.event, size: 40),
@@ -61,8 +62,8 @@ class MyEventsScreen extends StatelessWidget {
                         '${event.formattedDate}  •  ${event.venue}',
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis),
-                    trailing: const Icon(Icons.check_circle,
-                        color: Colors.green),
+                    trailing: Icon(Icons.check_circle,
+                        color: Theme.of(context).colorScheme.secondary),
                     onTap: () => Navigator.push(
                       context,
                       MaterialPageRoute(

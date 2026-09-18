@@ -6,6 +6,8 @@ import 'providers/language_provider.dart';
 import 'providers/registered_provider.dart';
 import 'providers/theme_provider.dart';
 import 'screens/main_screen.dart';
+import 'theme/app_theme.dart';
+import 'widgets/aura_background.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -49,25 +51,9 @@ class CampusEventFinderApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       locale: locale,
       themeMode: themeMode,
-
-      // ── Light theme ──────────────────────────────────────────────────────
-      theme: ThemeData(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF1565C0), // deep blue
-          brightness: Brightness.light,
-        ),
-      ),
-
-      // ── Dark theme ───────────────────────────────────────────────────────
-      darkTheme: ThemeData(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF1565C0),
-          brightness: Brightness.dark,
-        ),
-      ),
-
+      theme: AppTheme.light(),
+      darkTheme: AppTheme.dark(),
+      builder: (context, child) => AuraBackground(child: child ?? const SizedBox()),
       home: const MainScreen(),
     );
   }

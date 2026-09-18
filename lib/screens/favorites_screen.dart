@@ -22,7 +22,9 @@ class FavoritesScreen extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(Icons.favorite_border, size: 64, color: Colors.grey),
+                  Icon(Icons.favorite_border,
+                      size: 64,
+                      color: Theme.of(context).colorScheme.primary),
                   const SizedBox(height: 16),
                   Text(
                     t('no_favorites'),

@@ -55,7 +55,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(lang.t('success')),
-        backgroundColor: Colors.green,
+        backgroundColor: const Color(0xFF0F766E),
         duration: const Duration(seconds: 2),
       ),
     );
@@ -82,7 +82,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
               // ── Event summary card ──────────────────────────────────────
               Card(
                 child: ListTile(
-                  leading: const Icon(Icons.event),
+                  leading: CircleAvatar(
+                    backgroundColor:
+                        Theme.of(context).colorScheme.primaryContainer,
+                    child: Icon(Icons.confirmation_number_outlined,
+                        color: Theme.of(context).colorScheme.primary),
+                  ),
                   title: Text(event.name,
                       style:
                           const TextStyle(fontWeight: FontWeight.bold)),
@@ -99,7 +104,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 decoration: InputDecoration(
                   labelText: t('name'),
                   prefixIcon: const Icon(Icons.person_outline),
-                  border: const OutlineInputBorder(),
                 ),
                 validator: (v) =>
                     (v == null || v.trim().isEmpty) ? t('name_required') : null,
@@ -112,7 +116,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 decoration: InputDecoration(
                   labelText: t('email'),
                   prefixIcon: const Icon(Icons.email_outlined),
-                  border: const OutlineInputBorder(),
                 ),
                 validator: (v) {
                   if (v == null || v.trim().isEmpty) return t('email_required');
@@ -130,7 +133,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 decoration: InputDecoration(
                   labelText: t('student_id'),
                   prefixIcon: const Icon(Icons.badge_outlined),
-                  border: const OutlineInputBorder(),
                 ),
                 validator: (v) =>
                     (v == null || v.trim().isEmpty) ? t('id_required') : null,

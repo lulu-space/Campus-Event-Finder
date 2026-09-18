@@ -70,34 +70,56 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
-            expandedHeight: 260,
+            expandedHeight: 300,
             pinned: true,
+            backgroundColor: Colors.transparent,
             actions: [
-              IconButton(
-                icon: Icon(
-                  isFav ? Icons.favorite : Icons.favorite_border,
-                  color: isFav ? Colors.redAccent : null,
+              Padding(
+                padding: const EdgeInsets.only(right: 8),
+                child: IconButton.filledTonal(
+                  icon: Icon(
+                    isFav ? Icons.favorite : Icons.favorite_border,
+                    color: isFav ? const Color(0xFFFF6B8A) : null,
+                  ),
+                  onPressed: () =>
+                      context.read<FavoritesProvider>().toggle(_event),
+                  tooltip: t('favorites'),
                 ),
-                onPressed: () =>
-                    context.read<FavoritesProvider>().toggle(_event),
-                tooltip: t('favorites'),
               ),
             ],
             flexibleSpace: FlexibleSpaceBar(
-              background: Hero(
-                tag: 'event_image_${widget.event.id}',
-                child: CachedNetworkImage(
-                  imageUrl: heroImageUrl,
-                  fit: BoxFit.cover,
-                  placeholder: (_, __) => Container(
-                      color: colorScheme.surfaceVariant,
-                      child: const Center(child: CircularProgressIndicator())),
-                  errorWidget: (_, __, ___) => Container(
-                    color: colorScheme.surfaceVariant,
-                    child: Icon(Icons.event,
-                        size: 80, color: colorScheme.onSurfaceVariant),
+              background: Stack(
+                fit: StackFit.expand,
+                children: [
+                  Hero(
+                    tag: 'event_image_${widget.event.id}',
+                    child: CachedNetworkImage(
+                      imageUrl: heroImageUrl,
+                      fit: BoxFit.cover,
+                      placeholder: (_, __) => Container(
+                          color: colorScheme.surfaceContainerHighest,
+                          child: const Center(child: CircularProgressIndicator())),
+                      errorWidget: (_, __, ___) => Container(
+                        color: colorScheme.surfaceContainerHighest,
+                        child: Icon(Icons.event,
+                            size: 80, color: colorScheme.onSurfaceVariant),
+                      ),
+                    ),
                   ),
-                ),
+                  const DecoratedBox(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Color(0x660B0B14),
+                          Color(0x000B0B14),
+                          Color(0xCC0B0B14),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
