@@ -5,6 +5,7 @@ import '../models/event_model.dart';
 import '../providers/language_provider.dart';
 import '../services/api_exception.dart';
 import '../services/api_service.dart';
+import '../services/location_query.dart';
 import '../widgets/event_card.dart';
 import 'event_details_screen.dart';
 
@@ -43,8 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
     super.dispose();
   }
 
-  String get _city =>
-      _cityController.text.trim().isEmpty ? 'London' : _cityController.text.trim();
+  LocationQuery get _location => LocationQuery.parse(_cityController.text);
 
   String? get _keyword {
     final value = _searchController.text.trim();
@@ -52,10 +52,12 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _load({String? keyword, String? category}) {
+    final location = _location;
     setState(() {
       _eventsFuture = ApiService.fetchEvents(
         keyword: keyword ?? _keyword,
-        city: _city,
+        city: location.city,
+        countryCode: location.countryCode,
         category: (category ?? _selectedCategory) == 'All'
             ? null
             : (category ?? _selectedCategory),

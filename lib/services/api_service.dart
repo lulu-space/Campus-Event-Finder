@@ -29,11 +29,12 @@ class ApiService {
 
   // ── Events list ────────────────────────────────────────────────────────────
 
-  /// Search events by [keyword] and/or [city], optionally filtered by
-  /// [category] (e.g. "Music", "Sports", "Arts & Theatre").
+  /// Search events by [keyword], [city] and/or [countryCode], optionally
+  /// filtered by [category] (e.g. "Music", "Sports", "Arts & Theatre").
   static Future<List<Event>> fetchEvents({
     String? keyword,
-    String city = 'London',
+    String? city,
+    String? countryCode,
     String? category,
     int size = 20,
   }) async {
@@ -45,7 +46,15 @@ class ApiService {
     if (keyword != null && keyword.trim().isNotEmpty) {
       params['keyword'] = keyword.trim();
     }
-    if (city.isNotEmpty) params['city'] = city;
+    if (countryCode != null && countryCode.trim().isNotEmpty) {
+      params['countryCode'] = countryCode.trim().toUpperCase();
+    }
+    if (city != null && city.trim().isNotEmpty) {
+      params['city'] = city.trim();
+    }
+    if (params['countryCode'] == null && params['city'] == null) {
+      params['city'] = 'London';
+    }
     if (category != null && category != 'All') {
       params['classificationName'] = category;
     }
