@@ -1,9 +1,9 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/language_provider.dart';
 import '../providers/registered_provider.dart';
+import '../widgets/event_poster.dart';
 import 'event_details_screen.dart';
 
 class MyEventsScreen extends StatelessWidget {
@@ -45,13 +45,10 @@ class MyEventsScreen extends StatelessWidget {
                     contentPadding: const EdgeInsets.all(8),
                     leading: ClipRRect(
                       borderRadius: BorderRadius.circular(12),
-                      child: CachedNetworkImage(
+                      child: EventPoster(
                         imageUrl: event.imageUrl,
                         width: 72,
                         height: 72,
-                        fit: BoxFit.cover,
-                        errorWidget: (_, __, ___) =>
-                            const Icon(Icons.event, size: 40),
                       ),
                     ),
                     title: Text(event.name,

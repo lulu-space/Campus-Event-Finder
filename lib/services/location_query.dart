@@ -1,3 +1,29 @@
+class TicketmasterMarket {
+  final String code;
+  final String nameEn;
+  final String nameAr;
+
+  const TicketmasterMarket(this.code, this.nameEn, this.nameAr);
+
+  String label(bool isArabic) => isArabic ? nameAr : nameEn;
+}
+
+/// Countries Ticketmaster actually sells in. Used by the Home country dropdown.
+const ticketmasterMarkets = [
+  TicketmasterMarket('GB', 'United Kingdom', 'المملكة المتحدة'),
+  TicketmasterMarket('US', 'United States', 'الولايات المتحدة'),
+  TicketmasterMarket('CA', 'Canada', 'كندا'),
+  TicketmasterMarket('IE', 'Ireland', 'أيرلندا'),
+  TicketmasterMarket('AU', 'Australia', 'أستراليا'),
+  TicketmasterMarket('NZ', 'New Zealand', 'نيوزيلندا'),
+  TicketmasterMarket('DE', 'Germany', 'ألمانيا'),
+  TicketmasterMarket('ES', 'Spain', 'إسبانيا'),
+  TicketmasterMarket('NL', 'Netherlands', 'هولندا'),
+  TicketmasterMarket('AE', 'United Arab Emirates', 'الإمارات'),
+  TicketmasterMarket('MX', 'Mexico', 'المكسيك'),
+  TicketmasterMarket('TR', 'Turkey', 'تركيا'),
+];
+
 /// Turns a location field into Ticketmaster `city` and/or `countryCode`.
 class LocationQuery {
   final String? city;

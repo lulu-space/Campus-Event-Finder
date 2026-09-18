@@ -29,6 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
   late Future<List<Event>> _eventsFuture;
   final _searchController = TextEditingController();
   final _cityController = TextEditingController(text: 'London');
+  String _countryCode = 'GB';
   String _selectedCategory = 'All';
 
   @override
@@ -44,20 +45,18 @@ class _HomeScreenState extends State<HomeScreen> {
     super.dispose();
   }
 
-  LocationQuery get _location => LocationQuery.parse(_cityController.text);
-
   String? get _keyword {
     final value = _searchController.text.trim();
     return value.isEmpty ? null : value;
   }
 
   void _load({String? keyword, String? category}) {
-    final location = _location;
+    final city = _cityController.text.trim();
     setState(() {
       _eventsFuture = ApiService.fetchEvents(
         keyword: keyword ?? _keyword,
-        city: location.city,
-        countryCode: location.countryCode,
+        city: city.isEmpty ? null : city,
+        countryCode: _countryCode,
         category: (category ?? _selectedCategory) == 'All'
             ? null
             : (category ?? _selectedCategory),
@@ -133,6 +132,32 @@ class _HomeScreenState extends State<HomeScreen> {
                           : null,
                     ),
                     onChanged: (_) => setState(() {}),
+                  ),
+                  const SizedBox(height: 10),
+                  InputDecorator(
+                    decoration: InputDecoration(
+                      labelText: t('country'),
+                      prefixIcon: const Icon(Icons.public),
+                    ),
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton<String>(
+                        value: _countryCode,
+                        isExpanded: true,
+                        borderRadius: BorderRadius.circular(16),
+                        items: [
+                          for (final market in ticketmasterMarkets)
+                            DropdownMenuItem(
+                              value: market.code,
+                              child: Text(market.label(lang.isArabic)),
+                            ),
+                        ],
+                        onChanged: (code) {
+                          if (code == null) return;
+                          setState(() => _countryCode = code);
+                          _load();
+                        },
+                      ),
+                    ),
                   ),
                   const SizedBox(height: 10),
                   TextField(

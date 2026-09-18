@@ -35,15 +35,11 @@ class Event {
         (embedded['venues'] as List?)?.cast<Map<String, dynamic>>() ?? [];
     final venueMap = venues.isNotEmpty ? venues[0] : <String, dynamic>{};
 
-    // Pick best 16:9 image, or fall back to whatever is available
+    // Prefer a real poster. Ticketmaster `fallback: true` images are generic
+    // category art (often black / empty) and should not be shown as the event photo.
     final images =
         (json['images'] as List?)?.cast<Map<String, dynamic>>() ?? [];
-    final wideImages = images.where((i) => i['ratio'] == '16_9').toList();
-    final imageList = wideImages.isNotEmpty ? wideImages : images;
-    final bestImage = imageList.isNotEmpty
-        ? imageList.reduce((a, b) =>
-            ((a['width'] as int? ?? 0) >= (b['width'] as int? ?? 0)) ? a : b)
-        : null;
+    final imageUrl = Event.pickImageUrl(images);
 
     final classifications =
         (json['classifications'] as List?)?.cast<Map<String, dynamic>>() ?? [];
@@ -59,7 +55,7 @@ class Event {
       time: start['localTime'] as String? ?? '',
       venue: venueMap['name'] as String? ?? 'TBA',
       city: (venueMap['city'] as Map?)?['name'] as String? ?? '',
-      imageUrl: bestImage?['url'] as String? ?? '',
+      imageUrl: imageUrl,
       category: segment,
       ticketUrl: json['url'] as String? ?? '',
       info: json['info'] as String?,
@@ -125,6 +121,32 @@ class Event {
     } catch (_) {
       return time;
     }
+  }
+
+  /// Real Ticketmaster artwork only. Generic `fallback` images are skipped.
+  static String pickImageUrl(List<Map<String, dynamic>> images) {
+    bool isReal(Map<String, dynamic> image) {
+      final url = image['url'] as String? ?? '';
+      return url.isNotEmpty && image['fallback'] != true;
+    }
+
+    var pool = images.where(isReal).toList();
+    if (pool.isEmpty) return '';
+
+    final wide = pool.where((image) => image['ratio'] == '16_9').toList();
+    if (wide.isNotEmpty) pool = wide;
+
+    pool.sort((a, b) {
+      int widthOf(Map<String, dynamic> image) {
+        final width = image['width'];
+        if (width is int) return width;
+        if (width is num) return width.toInt();
+        return 0;
+      }
+
+      return widthOf(b).compareTo(widthOf(a));
+    });
+    return pool.first['url'] as String? ?? '';
   }
 
   String encode() => jsonEncode(toJson());

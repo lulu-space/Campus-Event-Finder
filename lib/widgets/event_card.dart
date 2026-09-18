@@ -1,9 +1,9 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../models/event_model.dart';
 import '../providers/favorites_provider.dart';
+import 'event_poster.dart';
 
 /// Event poster card. Featured cards use a full-bleed image with Aura overlay.
 class EventCard extends StatelessWidget {
@@ -62,17 +62,10 @@ class _FeaturedCard extends StatelessWidget {
                 children: [
                   Hero(
                     tag: 'event_image_${event.id}',
-                    child: CachedNetworkImage(
+                    child: EventPoster(
                       imageUrl: event.imageUrl,
                       fit: BoxFit.cover,
-                      placeholder: (_, __) => Container(
-                        color: scheme.surfaceContainerHighest,
-                        child: const Center(child: CircularProgressIndicator()),
-                      ),
-                      errorWidget: (_, __, ___) => Container(
-                        color: scheme.surfaceContainerHighest,
-                        child: Icon(Icons.event, size: 64, color: scheme.onSurfaceVariant),
-                      ),
+                      iconSize: 64,
                     ),
                   ),
                   const DecoratedBox(
@@ -172,22 +165,10 @@ class _RowCard extends StatelessWidget {
                   tag: 'event_image_${event.id}',
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(14),
-                    child: CachedNetworkImage(
+                    child: EventPoster(
                       imageUrl: event.imageUrl,
                       width: 92,
                       height: 92,
-                      fit: BoxFit.cover,
-                      placeholder: (_, __) => Container(
-                        width: 92,
-                        height: 92,
-                        color: scheme.surfaceContainerHighest,
-                      ),
-                      errorWidget: (_, __, ___) => Container(
-                        width: 92,
-                        height: 92,
-                        color: scheme.surfaceContainerHighest,
-                        child: Icon(Icons.event, color: scheme.onSurfaceVariant),
-                      ),
                     ),
                   ),
                 ),

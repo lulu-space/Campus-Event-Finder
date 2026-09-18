@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -8,6 +7,7 @@ import '../providers/favorites_provider.dart';
 import '../providers/language_provider.dart';
 import '../services/api_exception.dart';
 import '../services/api_service.dart';
+import '../widgets/event_poster.dart';
 import 'register_screen.dart';
 
 class EventDetailsScreen extends StatefulWidget {
@@ -93,17 +93,10 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                 children: [
                   Hero(
                     tag: 'event_image_${widget.event.id}',
-                    child: CachedNetworkImage(
+                    child: EventPoster(
                       imageUrl: heroImageUrl,
                       fit: BoxFit.cover,
-                      placeholder: (_, __) => Container(
-                          color: colorScheme.surfaceContainerHighest,
-                          child: const Center(child: CircularProgressIndicator())),
-                      errorWidget: (_, __, ___) => Container(
-                        color: colorScheme.surfaceContainerHighest,
-                        child: Icon(Icons.event,
-                            size: 80, color: colorScheme.onSurfaceVariant),
-                      ),
+                      iconSize: 80,
                     ),
                   ),
                   const DecoratedBox(
