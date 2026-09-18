@@ -117,12 +117,18 @@ class _StatCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
+    final isDark = scheme.brightness == Brightness.dark;
+    final fill = Color.alphaBlend(
+      color.withValues(alpha: isDark ? 0.18 : 0.10),
+      isDark ? const Color(0xFF14141C) : const Color(0xFFFFFBFF),
+    );
+
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 8),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
-        color: scheme.surfaceContainerHigh.withValues(alpha: 0.85),
-        border: Border.all(color: color.withValues(alpha: 0.35)),
+        color: fill,
+        border: Border.all(color: color.withValues(alpha: 0.45), width: 1.4),
       ),
       child: Column(
         children: [
