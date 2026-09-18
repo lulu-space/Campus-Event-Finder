@@ -1,11 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import '../models/event_model.dart';
-import '../providers/favorites_provider.dart';
+import '../theme/category_style.dart';
 
-/// A card that displays an event summary.
+/// A card that displays a campus event summary.
 /// [featured] makes the card taller (hero banner style).
 class EventCard extends StatelessWidget {
   final Event event;
@@ -21,105 +20,166 @@ class EventCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+    final style = CategoryStyle.of(event.category);
 
-    return GestureDetector(
-      onTap: onTap,
-      child: Card(
-        clipBehavior: Clip.antiAlias,
-        margin: featured
-            ? const EdgeInsets.symmetric(horizontal: 16, vertical: 8)
-            : const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        elevation: featured ? 6 : 3,
+    return Card(
+      clipBehavior: Clip.antiAlias,
+      margin: EdgeInsets.symmetric(horizontal: 16, vertical: featured ? 8 : 6),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+      elevation: featured ? 5 : 2,
+      child: InkWell(
+        onTap: onTap,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // ── Image with Hero ─────────────────────────────────────────────
-            Hero(
-              tag: 'event_image_${event.id}',
-              child: CachedNetworkImage(
-                imageUrl: event.imageUrl,
-                height: featured ? 200 : 140,
-                width: double.infinity,
-                fit: BoxFit.cover,
-                placeholder: (_, __) => Container(
-                  height: featured ? 200 : 140,
-                  color: colorScheme.surfaceVariant,
-                  child: const Center(child: CircularProgressIndicator()),
-                ),
-                errorWidget: (_, __, ___) => Container(
-                  height: featured ? 200 : 140,
-                  color: colorScheme.surfaceVariant,
-                  child: Icon(Icons.event,
-                      size: 60, color: colorScheme.onSurfaceVariant),
-                ),
-              ),
-            ),
-
-            // ── Info ─────────────────────────────────────────────────────────
+            EventBanner(event: event, height: featured ? 150 : 110),
             Padding(
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.fromLTRB(14, 12, 14, 14),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Category chip
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                    decoration: BoxDecoration(
-                      color: colorScheme.primaryContainer,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Text(
-                      event.category,
-                      style: TextStyle(
-                        fontSize: 11,
-                        color: colorScheme.onPrimaryContainer,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-
-                  // Title
                   Text(
                     event.name,
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                    maxLines: featured ? 2 : 1,
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleMedium
+                        ?.copyWith(fontWeight: FontWeight.bold),
+                    maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  const SizedBox(height: 4),
-
-                  // Date + venue row
-                  Row(
-                    children: [
-                      Icon(Icons.calendar_today_outlined,
-                          size: 13, color: colorScheme.primary),
-                      const SizedBox(width: 4),
-                      Text(event.formattedDate,
-                          style: Theme.of(context).textTheme.bodySmall),
-                      const SizedBox(width: 12),
-                      Icon(Icons.location_on_outlined,
-                          size: 13, color: colorScheme.primary),
-                      const SizedBox(width: 4),
-                      Expanded(
-                        child: Text(
-                          event.venue,
-                          style: Theme.of(context).textTheme.bodySmall,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ],
+                  const SizedBox(height: 8),
+                  _IconLine(
+                    icon: Icons.calendar_today_outlined,
+                    text: '${event.formattedDate}  ·  ${event.formattedTime}',
+                    color: style.color,
                   ),
+                  const SizedBox(height: 4),
+                  _IconLine(
+                    icon: Icons.place_outlined,
+                    text: event.location,
+                    color: style.color,
+                  ),
+                  if (event.organizer.isNotEmpty) ...[
+                    const SizedBox(height: 4),
+                    _IconLine(
+                      icon: Icons.groups_outlined,
+                      text: event.organizer,
+                      color: style.color,
+                    ),
+                  ],
                 ],
               ),
             ),
           ],
         ),
       ),
+    );
+  }
+}
+
+/// The color-coded header for an event. Shows the event image if one is
+/// provided, otherwise a category gradient with the category icon and label.
+class EventBanner extends StatelessWidget {
+  final Event event;
+  final double height;
+
+  const EventBanner({super.key, required this.event, required this.height});
+
+  @override
+  Widget build(BuildContext context) {
+    final style = CategoryStyle.of(event.category);
+
+    return Hero(
+      tag: 'event_image_${event.id}',
+      child: SizedBox(
+        height: height,
+        width: double.infinity,
+        child: event.imageUrl.isNotEmpty
+            ? CachedNetworkImage(
+                imageUrl: event.imageUrl,
+                fit: BoxFit.cover,
+                placeholder: (_, __) => _gradient(style),
+                errorWidget: (_, __, ___) => _gradient(style, showIcon: true),
+              )
+            : _gradient(style, showIcon: true),
+      ),
+    );
+  }
+
+  Widget _gradient(CategoryStyle style, {bool showIcon = false}) {
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            style.color,
+            Color.lerp(style.color, Colors.black, 0.35) ?? style.color,
+          ],
+        ),
+      ),
+      child: Stack(
+        children: [
+          Positioned(
+            right: -12,
+            bottom: -12,
+            child: Icon(style.icon,
+                size: 110, color: Colors.white.withValues(alpha: 0.18)),
+          ),
+          Positioned(
+            left: 14,
+            top: 14,
+            child: Container(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.22),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(style.icon, size: 15, color: Colors.white),
+                  const SizedBox(width: 6),
+                  Text(
+                    event.category,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _IconLine extends StatelessWidget {
+  final IconData icon;
+  final String text;
+  final Color color;
+
+  const _IconLine({required this.icon, required this.text, required this.color});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Icon(icon, size: 15, color: color),
+        const SizedBox(width: 6),
+        Expanded(
+          child: Text(
+            text,
+            style: Theme.of(context).textTheme.bodySmall,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+      ],
     );
   }
 }

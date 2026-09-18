@@ -54,7 +54,7 @@ class CampusEventFinderApp extends StatelessWidget {
       theme: ThemeData(
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF1565C0), // deep blue
+          seedColor: const Color(0xFF4F46E5), // campus indigo
           brightness: Brightness.light,
         ),
       ),
@@ -63,7 +63,7 @@ class CampusEventFinderApp extends StatelessWidget {
       darkTheme: ThemeData(
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF1565C0),
+          seedColor: const Color(0xFF4F46E5),
           brightness: Brightness.dark,
         ),
       ),

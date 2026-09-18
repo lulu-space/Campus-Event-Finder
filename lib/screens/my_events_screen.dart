@@ -1,9 +1,9 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/language_provider.dart';
 import '../providers/registered_provider.dart';
+import '../theme/category_style.dart';
 import 'event_details_screen.dart';
 
 class MyEventsScreen extends StatelessWidget {
@@ -38,27 +38,29 @@ class MyEventsScreen extends StatelessWidget {
               separatorBuilder: (_, __) => const SizedBox(height: 8),
               itemBuilder: (context, index) {
                 final event = registered[index];
+                final style = CategoryStyle.of(event.category);
                 return Card(
                   clipBehavior: Clip.antiAlias,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12)),
                   child: ListTile(
-                    contentPadding: EdgeInsets.zero,
-                    leading: SizedBox(
-                      width: 80,
-                      child: CachedNetworkImage(
-                        imageUrl: event.imageUrl,
-                        fit: BoxFit.cover,
-                        errorWidget: (_, __, ___) =>
-                            const Icon(Icons.event, size: 40),
+                    contentPadding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    leading: Container(
+                      width: 48,
+                      height: 48,
+                      decoration: BoxDecoration(
+                        color: style.color.withValues(alpha: 0.15),
+                        borderRadius: BorderRadius.circular(12),
                       ),
+                      child: Icon(style.icon, color: style.color),
                     ),
                     title: Text(event.name,
                         style: const TextStyle(fontWeight: FontWeight.bold),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis),
                     subtitle: Text(
-                        '${event.formattedDate}  •  ${event.venue}',
+                        '${event.formattedDate}  •  ${event.location}',
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis),
                     trailing: const Icon(Icons.check_circle,

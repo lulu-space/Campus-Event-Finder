@@ -1,100 +1,65 @@
 import 'dart:convert';
 
+/// A campus event: a tech talk, seminar, workshop, debate, competition,
+/// sports fixture, club activity, and so on.
+///
+/// The same shape is used everywhere in the app, whether the event comes from
+/// the bundled `assets/events.json` file or (later) a backend such as Firebase.
 class Event {
   final String id;
   final String name;
-  final String date; // e.g. "2026-10-15"
-  final String time; // e.g. "19:00:00"
-  final String venue;
-  final String city;
-  final String imageUrl;
-  final String category;
-  final String ticketUrl;
-  final String? info;
+  final String description;
+  final String date; // ISO date, e.g. "2026-10-15"
+  final String time; // 24h time, e.g. "14:00"
+  final String location; // building / room, e.g. "Auditorium A, IT Building"
+  final String organizer; // hosting club / department / faculty
+  final String imageUrl; // optional; empty means "use the category banner"
+  final String category; // one of the campus categories
+  final String? registrationUrl; // optional external sign-up link
 
   const Event({
     required this.id,
     required this.name,
+    required this.description,
     required this.date,
     required this.time,
-    required this.venue,
-    required this.city,
-    required this.imageUrl,
+    required this.location,
+    required this.organizer,
     required this.category,
-    required this.ticketUrl,
-    this.info,
+    this.imageUrl = '',
+    this.registrationUrl,
   });
 
-  /// Build an Event from a Ticketmaster Discovery API event JSON object.
-  factory Event.fromJson(Map<String, dynamic> json) {
-    final dates = json['dates'] as Map<String, dynamic>? ?? {};
-    final start = dates['start'] as Map<String, dynamic>? ?? {};
+  /// Build an Event from a JSON object (the bundled asset uses this exact
+  /// shape, so the same parser works for stored data too).
+  factory Event.fromJson(Map<String, dynamic> json) => Event(
+        id: json['id'] as String,
+        name: json['name'] as String? ?? 'Untitled Event',
+        description: json['description'] as String? ?? '',
+        date: json['date'] as String? ?? '',
+        time: json['time'] as String? ?? '',
+        location: json['location'] as String? ?? 'TBA',
+        organizer: json['organizer'] as String? ?? '',
+        imageUrl: json['imageUrl'] as String? ?? '',
+        category: json['category'] as String? ?? 'Event',
+        registrationUrl: json['registrationUrl'] as String?,
+      );
 
-    final embedded = json['_embedded'] as Map<String, dynamic>? ?? {};
-    final venues =
-        (embedded['venues'] as List?)?.cast<Map<String, dynamic>>() ?? [];
-    final venueMap = venues.isNotEmpty ? venues[0] : <String, dynamic>{};
-
-    // Pick best 16:9 image, or fall back to whatever is available
-    final images =
-        (json['images'] as List?)?.cast<Map<String, dynamic>>() ?? [];
-    final wideImages = images.where((i) => i['ratio'] == '16_9').toList();
-    final imageList = wideImages.isNotEmpty ? wideImages : images;
-    final bestImage = imageList.isNotEmpty
-        ? imageList.reduce((a, b) =>
-            ((a['width'] as int? ?? 0) >= (b['width'] as int? ?? 0)) ? a : b)
-        : null;
-
-    final classifications =
-        (json['classifications'] as List?)?.cast<Map<String, dynamic>>() ?? [];
-    final segment = classifications.isNotEmpty
-        ? ((classifications[0]['segment'] as Map?)?['name'] as String? ??
-            'Event')
-        : 'Event';
-
-    return Event(
-      id: json['id'] as String,
-      name: json['name'] as String? ?? 'Unknown Event',
-      date: start['localDate'] as String? ?? '',
-      time: start['localTime'] as String? ?? '',
-      venue: venueMap['name'] as String? ?? 'TBA',
-      city: (venueMap['city'] as Map?)?['name'] as String? ?? '',
-      imageUrl: bestImage?['url'] as String? ?? '',
-      category: segment,
-      ticketUrl: json['url'] as String? ?? '',
-      info: json['info'] as String?,
-    );
-  }
-
-  /// For persisting to SharedPreferences.
+  /// Convert to a plain map for JSON storage (favorites / registrations).
   Map<String, dynamic> toJson() => {
         'id': id,
         'name': name,
+        'description': description,
         'date': date,
         'time': time,
-        'venue': venue,
-        'city': city,
+        'location': location,
+        'organizer': organizer,
         'imageUrl': imageUrl,
         'category': category,
-        'ticketUrl': ticketUrl,
-        'info': info,
+        'registrationUrl': registrationUrl,
       };
 
-  /// Restore from a SharedPreferences-stored map.
-  factory Event.fromStoredJson(Map<String, dynamic> json) => Event(
-        id: json['id'] as String,
-        name: json['name'] as String,
-        date: json['date'] as String,
-        time: json['time'] as String,
-        venue: json['venue'] as String,
-        city: json['city'] as String,
-        imageUrl: json['imageUrl'] as String,
-        category: json['category'] as String,
-        ticketUrl: json['ticketUrl'] as String,
-        info: json['info'] as String?,
-      );
-
-  /// Human-readable date: "Oct 15, 2026"
+  /// Human-readable date: "Oct 15, 2026".
   String get formattedDate {
     if (date.isEmpty) return 'TBA';
     try {
@@ -102,7 +67,7 @@ class Event {
       final dt = DateTime(
           int.parse(parts[0]), int.parse(parts[1]), int.parse(parts[2]));
       const months = [
-        'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+        'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', //
         'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
       ];
       return '${months[dt.month - 1]} ${dt.day}, ${dt.year}';
@@ -111,7 +76,7 @@ class Event {
     }
   }
 
-  /// Human-readable time: "7:00 PM"
+  /// Human-readable time: "2:00 PM".
   String get formattedTime {
     if (time.isEmpty) return 'TBA';
     try {
@@ -130,5 +95,5 @@ class Event {
   String encode() => jsonEncode(toJson());
 
   static Event decode(String source) =>
-      Event.fromStoredJson(jsonDecode(source) as Map<String, dynamic>);
+      Event.fromJson(jsonDecode(source) as Map<String, dynamic>);
 }

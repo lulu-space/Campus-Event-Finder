@@ -16,8 +16,7 @@ class LocalStorageService {
     final prefs = await SharedPreferences.getInstance();
     final raw = prefs.getStringList(_keyFavorites) ?? [];
     return raw
-        .map((s) => Event.fromStoredJson(
-            jsonDecode(s) as Map<String, dynamic>))
+        .map((s) => Event.fromJson(jsonDecode(s) as Map<String, dynamic>))
         .toList();
   }
 
@@ -33,8 +32,7 @@ class LocalStorageService {
     final prefs = await SharedPreferences.getInstance();
     final raw = prefs.getStringList(_keyRegistered) ?? [];
     return raw
-        .map((s) => Event.fromStoredJson(
-            jsonDecode(s) as Map<String, dynamic>))
+        .map((s) => Event.fromJson(jsonDecode(s) as Map<String, dynamic>))
         .toList();
   }
 
