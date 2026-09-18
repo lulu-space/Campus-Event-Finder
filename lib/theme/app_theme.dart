@@ -98,9 +98,9 @@ class AppTheme {
         centerTitle: false,
         titleTextStyle: AppTypography.display(
           scheme,
-          size: 24,
-          weight: FontWeight.w800,
-          letterSpacing: -0.6,
+          size: 22,
+          weight: FontWeight.w600,
+          letterSpacing: -0.2,
         ),
       ),
       cardTheme: CardThemeData(

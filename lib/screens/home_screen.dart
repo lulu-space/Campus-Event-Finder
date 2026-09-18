@@ -97,11 +97,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     t('app_title'),
                     style: Theme.of(context).textTheme.headlineMedium,
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: 8),
                   Text(
                     t('tagline'),
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: scheme.onSurfaceVariant,
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          color: scheme.primary,
+                          fontWeight: FontWeight.w500,
+                          height: 1.35,
                         ),
                   ),
                 ],

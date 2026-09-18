@@ -29,7 +29,7 @@ class LanguageProvider extends ChangeNotifier {
   static const Map<String, Map<String, String>> _strings = {
     'en': {
       'app_title': 'Campus Event Finder',
-      'tagline': 'Nights, matches, and shows near you',
+      'tagline': 'Find your next campus event',
       'home': 'Home',
       'my_events': 'My Events',
       'favorites': 'Favorites',
@@ -72,7 +72,7 @@ class LanguageProvider extends ChangeNotifier {
     },
     'ar': {
       'app_title': 'مكتشف الفعاليات الجامعية',
-      'tagline': 'أمسيات ومباريات وعروض بقربك',
+      'tagline': 'اعثر على فعاليتك الجامعية القادمة',
       'home': 'الرئيسية',
       'my_events': 'فعالياتي',
       'favorites': 'المفضلة',
