@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+import 'app_typography.dart';
 
 class AppTheme {
   AppTheme._();
@@ -93,11 +96,11 @@ class AppTheme {
         elevation: 0,
         scrolledUnderElevation: 0,
         centerTitle: false,
-        titleTextStyle: TextStyle(
-          color: scheme.onSurface,
-          fontSize: 22,
-          fontWeight: FontWeight.w700,
-          letterSpacing: -0.4,
+        titleTextStyle: AppTypography.display(
+          scheme,
+          size: 24,
+          weight: FontWeight.w800,
+          letterSpacing: -0.6,
         ),
       ),
       cardTheme: CardThemeData(
@@ -119,9 +122,10 @@ class AppTheme {
         indicatorColor: scheme.primary.withValues(alpha: isDark ? 0.22 : 0.16),
         labelTextStyle: WidgetStateProperty.resolveWith((states) {
           final selected = states.contains(WidgetState.selected);
-          return TextStyle(
-            fontSize: 12,
-            fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+          return AppTypography.body(
+            scheme,
+            size: 12,
+            weight: selected ? FontWeight.w700 : FontWeight.w500,
             color: selected ? scheme.primary : scheme.onSurfaceVariant,
           );
         }),
@@ -137,15 +141,16 @@ class AppTheme {
         backgroundColor: scheme.surfaceContainerHighest,
         selectedColor: scheme.primary,
         disabledColor: scheme.surfaceContainer,
-        labelStyle: TextStyle(
-          color: scheme.onSurface,
-          fontWeight: FontWeight.w600,
-          fontSize: 13,
+        labelStyle: AppTypography.body(
+          scheme,
+          size: 13,
+          weight: FontWeight.w600,
         ),
-        secondaryLabelStyle: TextStyle(
+        secondaryLabelStyle: AppTypography.body(
+          scheme,
+          size: 13,
+          weight: FontWeight.w700,
           color: scheme.onPrimary,
-          fontWeight: FontWeight.w700,
-          fontSize: 13,
         ),
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
         shape: StadiumBorder(
@@ -158,7 +163,10 @@ class AppTheme {
         fillColor: isDark
             ? scheme.surfaceContainerHigh.withValues(alpha: 0.9)
             : scheme.surfaceContainerLowest,
-        hintStyle: TextStyle(color: scheme.onSurfaceVariant),
+        hintStyle: AppTypography.body(
+          scheme,
+          color: scheme.onSurfaceVariant,
+        ),
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
         border: OutlineInputBorder(
@@ -183,10 +191,12 @@ class AppTheme {
           elevation: 0,
           padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 14),
           shape: const StadiumBorder(),
-          textStyle: const TextStyle(
-            fontWeight: FontWeight.w700,
-            fontSize: 16,
+          textStyle: AppTypography.body(
+            scheme,
+            size: 16,
+            weight: FontWeight.w700,
             letterSpacing: 0.2,
+            color: scheme.onPrimary,
           ),
         ),
       ),
@@ -196,50 +206,29 @@ class AppTheme {
           shape: const StadiumBorder(),
           side: BorderSide(color: scheme.outline),
           foregroundColor: scheme.primary,
-          textStyle: const TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
+          textStyle: AppTypography.body(
+            scheme,
+            size: 15,
+            weight: FontWeight.w600,
+            color: scheme.primary,
+          ),
         ),
       ),
       snackBarTheme: SnackBarThemeData(
         behavior: SnackBarBehavior.floating,
         backgroundColor: scheme.inverseSurface,
-        contentTextStyle: TextStyle(color: scheme.onInverseSurface),
+        contentTextStyle: AppTypography.body(
+          scheme,
+          color: scheme.onInverseSurface,
+        ),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
       ),
       dividerTheme: DividerThemeData(
         color: scheme.outlineVariant,
         space: 1,
       ),
-      textTheme: _textTheme(scheme),
-    );
-  }
-
-  static TextTheme _textTheme(ColorScheme scheme) {
-    final base = scheme.brightness == Brightness.dark
-        ? ThemeData.dark().textTheme
-        : ThemeData.light().textTheme;
-    return base.copyWith(
-      headlineSmall: base.headlineSmall?.copyWith(
-        fontWeight: FontWeight.w800,
-        letterSpacing: -0.6,
-        color: scheme.onSurface,
-      ),
-      titleLarge: base.titleLarge?.copyWith(
-        fontWeight: FontWeight.w700,
-        letterSpacing: -0.3,
-        color: scheme.onSurface,
-      ),
-      titleMedium: base.titleMedium?.copyWith(
-        fontWeight: FontWeight.w700,
-        color: scheme.onSurface,
-      ),
-      titleSmall: base.titleSmall?.copyWith(
-        fontWeight: FontWeight.w700,
-        letterSpacing: 0.4,
-        color: scheme.onSurfaceVariant,
-      ),
-      bodyLarge: base.bodyLarge?.copyWith(color: scheme.onSurface),
-      bodyMedium: base.bodyMedium?.copyWith(color: scheme.onSurface),
-      bodySmall: base.bodySmall?.copyWith(color: scheme.onSurfaceVariant),
+      textTheme: AppTypography.textTheme(scheme),
+      fontFamily: GoogleFonts.readexPro().fontFamily,
     );
   }
 }

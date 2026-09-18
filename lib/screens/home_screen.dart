@@ -95,7 +95,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   Text(
                     t('app_title'),
-                    style: Theme.of(context).textTheme.headlineSmall,
+                    style: Theme.of(context).textTheme.headlineMedium,
                   ),
                   const SizedBox(height: 4),
                   Text(

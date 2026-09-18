@@ -110,13 +110,15 @@ class _FeaturedCard extends StatelessWidget {
                           event.name,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 24,
-                            fontWeight: FontWeight.w800,
-                            height: 1.15,
-                            letterSpacing: -0.4,
-                          ),
+                          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                color: Colors.white,
+                                shadows: const [
+                                  Shadow(
+                                    color: Color(0x990B0B14),
+                                    blurRadius: 18,
+                                  ),
+                                ],
+                              ),
                         ),
                         const SizedBox(height: 8),
                         Text(

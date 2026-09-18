@@ -178,9 +178,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                   const SizedBox(height: 12),
                   Text(
                     _event.name,
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                    style: Theme.of(context).textTheme.headlineMedium,
                   ),
                   const SizedBox(height: 20),
                   _InfoRow(
@@ -266,7 +264,9 @@ class _InfoRow extends StatelessWidget {
           Icon(icon, size: 20, color: colorScheme.primary),
           const SizedBox(width: 10),
           Text('$label: ',
-              style: const TextStyle(fontWeight: FontWeight.w600)),
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontSize: 15,
+                  )),
           Expanded(child: Text(value, overflow: TextOverflow.ellipsis)),
         ],
       ),
