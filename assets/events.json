@@ -1,0 +1,128 @@
+[
+  {
+    "id": "evt-001",
+    "name": "AI & Robotics: The Next Decade",
+    "description": "A deep-dive tech talk on where artificial intelligence and robotics are heading, featuring live demos from the Robotics Lab and a Q&A with industry guests. Open to all majors.",
+    "date": "2026-09-24",
+    "time": "14:00",
+    "location": "Main Auditorium, IT Building",
+    "organizer": "Computer Science Department",
+    "category": "Tech Talk",
+    "registrationUrl": "https://campus.example.edu/events/ai-robotics"
+  },
+  {
+    "id": "evt-002",
+    "name": "Cybersecurity Awareness Seminar",
+    "description": "Learn how to protect your accounts, spot phishing, and understand the basics of ethical hacking. Presented by the university's IT Security team.",
+    "date": "2026-09-29",
+    "time": "11:30",
+    "location": "Seminar Hall 2, Library Complex",
+    "organizer": "IT Security Office",
+    "category": "Seminar"
+  },
+  {
+    "id": "evt-003",
+    "name": "Flutter Mobile App Workshop",
+    "description": "Hands-on workshop: build your first cross-platform mobile app with Flutter. Bring a laptop. Beginners welcome — mentors from the Dev Club will help you along.",
+    "date": "2026-10-03",
+    "time": "10:00",
+    "location": "Computer Lab 4, IT Building",
+    "organizer": "Developers Student Club",
+    "category": "Workshop",
+    "registrationUrl": "https://campus.example.edu/events/flutter-workshop"
+  },
+  {
+    "id": "evt-004",
+    "name": "Inter-Faculty Debate Championship",
+    "description": "The finals of the annual debate championship. Watch the best speakers from every faculty argue this year's motion: \"Technology does more good than harm.\"",
+    "date": "2026-10-08",
+    "time": "16:00",
+    "location": "Grand Hall, Student Center",
+    "organizer": "Debate & Literary Society",
+    "category": "Debate"
+  },
+  {
+    "id": "evt-005",
+    "name": "Annual Science & Innovation Fair",
+    "description": "Explore student research projects, startup prototypes, and lab demonstrations across engineering, biology, and physics. Prizes for the top three innovations.",
+    "date": "2026-10-15",
+    "time": "09:00",
+    "location": "Exhibition Grounds, Main Campus",
+    "organizer": "Faculty of Science",
+    "category": "Science Fair",
+    "registrationUrl": "https://campus.example.edu/events/science-fair"
+  },
+  {
+    "id": "evt-006",
+    "name": "Hackathon 2026: Build for Campus",
+    "description": "A 24-hour hackathon where teams build apps that solve real campus problems. Free food, mentorship, and cash prizes for the winning teams.",
+    "date": "2026-10-24",
+    "time": "08:00",
+    "location": "Innovation Hub, Engineering Block",
+    "organizer": "IEEE Student Branch",
+    "category": "Competition",
+    "registrationUrl": "https://campus.example.edu/events/hackathon-2026"
+  },
+  {
+    "id": "evt-007",
+    "name": "Photography Club Sunset Meetup",
+    "description": "Grab your camera (or phone) and join the Photography Club for a golden-hour shoot around campus. All skill levels welcome; editing tips shared afterward.",
+    "date": "2026-10-27",
+    "time": "17:30",
+    "location": "Central Courtyard",
+    "organizer": "Photography Club",
+    "category": "Club Activity"
+  },
+  {
+    "id": "evt-008",
+    "name": "Football League — Semi Final",
+    "description": "The semi-final of the inter-department football league. Come cheer for your faculty as the top four teams battle for a spot in the final.",
+    "date": "2026-11-02",
+    "time": "15:00",
+    "location": "University Stadium",
+    "organizer": "Sports & Athletics Office",
+    "category": "Sports"
+  },
+  {
+    "id": "evt-009",
+    "name": "From Idea to Startup: Founder Talk",
+    "description": "A candid talk with alumni founders on turning a class project into a funded startup. Learn about pitching, co-founders, and early mistakes to avoid.",
+    "date": "2026-11-09",
+    "time": "13:00",
+    "location": "Seminar Hall 1, Business Faculty",
+    "organizer": "Entrepreneurship Cell",
+    "category": "Tech Talk"
+  },
+  {
+    "id": "evt-010",
+    "name": "Campus Chess Tournament",
+    "description": "Open, single-elimination chess tournament. Register solo — boards and clocks provided. Trophies for the top three and a rapid blitz side event.",
+    "date": "2026-11-14",
+    "time": "10:30",
+    "location": "Recreation Room, Student Center",
+    "organizer": "Chess Club",
+    "category": "Competition",
+    "registrationUrl": "https://campus.example.edu/events/chess-tournament"
+  },
+  {
+    "id": "evt-011",
+    "name": "Intro to Data Science Bootcamp",
+    "description": "A one-day bootcamp covering Python, pandas, and building your first data visualization. Certificates awarded to participants who complete the final mini-project.",
+    "date": "2026-11-21",
+    "time": "09:30",
+    "location": "Computer Lab 1, IT Building",
+    "organizer": "Data Science Society",
+    "category": "Workshop",
+    "registrationUrl": "https://campus.example.edu/events/data-bootcamp"
+  },
+  {
+    "id": "evt-012",
+    "name": "Basketball Season Opener",
+    "description": "Tip-off for the new basketball season! Watch the university team take on last year's champions. Free entry with your student ID.",
+    "date": "2026-11-28",
+    "time": "18:00",
+    "location": "Indoor Sports Arena",
+    "organizer": "Sports & Athletics Office",
+    "category": "Sports"
+  }
+]

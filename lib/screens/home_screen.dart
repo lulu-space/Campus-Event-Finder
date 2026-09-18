@@ -3,19 +3,10 @@ import 'package:provider/provider.dart';
 
 import '../models/event_model.dart';
 import '../providers/language_provider.dart';
-import '../services/api_exception.dart';
-import '../services/api_service.dart';
+import '../services/event_service.dart';
+import '../theme/category_style.dart';
 import '../widgets/event_card.dart';
 import 'event_details_screen.dart';
-
-const List<String> _categories = [
-  'All',
-  'Music',
-  'Sports',
-  'Arts & Theatre',
-  'Film',
-  'Miscellaneous',
-];
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -27,7 +18,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late Future<List<Event>> _eventsFuture;
   final _searchController = TextEditingController();
-  final _cityController = TextEditingController(text: 'London');
   String _selectedCategory = 'All';
 
   @override
@@ -39,12 +29,8 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void dispose() {
     _searchController.dispose();
-    _cityController.dispose();
     super.dispose();
   }
-
-  String get _city =>
-      _cityController.text.trim().isEmpty ? 'London' : _cityController.text.trim();
 
   String? get _keyword {
     final value = _searchController.text.trim();
@@ -53,12 +39,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _load({String? keyword, String? category}) {
     setState(() {
-      _eventsFuture = ApiService.fetchEvents(
+      _eventsFuture = EventService.fetchEvents(
         keyword: keyword ?? _keyword,
-        city: _city,
-        category: (category ?? _selectedCategory) == 'All'
-            ? null
-            : (category ?? _selectedCategory),
+        category: category ?? _selectedCategory,
       );
     });
   }
@@ -73,8 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void _openDetails(BuildContext context, Event event) {
     Navigator.push(
       context,
-      MaterialPageRoute(
-          builder: (_) => EventDetailsScreen(event: event)),
+      MaterialPageRoute(builder: (_) => EventDetailsScreen(event: event)),
     );
   }
 
@@ -93,46 +75,28 @@ class _HomeScreenState extends State<HomeScreen> {
           // ── Search bar ───────────────────────────────────────────────────
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
-            child: Column(
-              children: [
-                TextField(
-                  controller: _searchController,
-                  textInputAction: TextInputAction.search,
-                  onSubmitted: _onSearch,
-                  decoration: InputDecoration(
-                    hintText: t('search_hint'),
-                    prefixIcon: const Icon(Icons.search),
-                    suffixIcon: _searchController.text.isNotEmpty
-                        ? IconButton(
-                            icon: const Icon(Icons.clear),
-                            onPressed: () {
-                              _searchController.clear();
-                              _onSearch();
-                            },
-                          )
-                        : null,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30)),
-                    contentPadding:
-                        const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
-                  ),
-                  onChanged: (_) => setState(() {}),
-                ),
-                const SizedBox(height: 8),
-                TextField(
-                  controller: _cityController,
-                  textInputAction: TextInputAction.search,
-                  onSubmitted: _onSearch,
-                  decoration: InputDecoration(
-                    hintText: t('city_hint'),
-                    prefixIcon: const Icon(Icons.location_city_outlined),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30)),
-                    contentPadding:
-                        const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
-                  ),
-                ),
-              ],
+            child: TextField(
+              controller: _searchController,
+              textInputAction: TextInputAction.search,
+              onSubmitted: _onSearch,
+              onChanged: (_) => setState(() {}),
+              decoration: InputDecoration(
+                hintText: t('search_hint'),
+                prefixIcon: const Icon(Icons.search),
+                suffixIcon: _searchController.text.isNotEmpty
+                    ? IconButton(
+                        icon: const Icon(Icons.clear),
+                        onPressed: () {
+                          _searchController.clear();
+                          _onSearch();
+                        },
+                      )
+                    : null,
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30)),
+                contentPadding:
+                    const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
+              ),
             ),
           ),
 
@@ -142,15 +106,28 @@ class _HomeScreenState extends State<HomeScreen> {
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              itemCount: _categories.length,
+              itemCount: CategoryStyle.categories.length,
               separatorBuilder: (_, __) => const SizedBox(width: 8),
               itemBuilder: (_, i) {
-                final cat = _categories[i];
-                final label = cat == 'All' ? t('all') : cat;
+                final cat = CategoryStyle.categories[i];
                 final selected = _selectedCategory == cat;
+                final style = CategoryStyle.of(cat);
+                final isAll = cat == 'All';
                 return ChoiceChip(
-                  label: Text(label),
+                  label: Text(isAll ? t('all') : cat),
                   selected: selected,
+                  avatar: isAll
+                      ? null
+                      : Icon(style.icon,
+                          size: 16,
+                          color: selected ? Colors.white : style.color),
+                  selectedColor: isAll
+                      ? Theme.of(context).colorScheme.primary
+                      : style.color,
+                  labelStyle: TextStyle(
+                    color: selected ? Colors.white : null,
+                    fontWeight: FontWeight.w600,
+                  ),
                   onSelected: (_) => _onCategoryTap(cat),
                 );
               },
@@ -167,18 +144,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 }
 
                 if (snapshot.hasError) {
-                  final msg = snapshot.error is ApiException
-                      ? snapshot.error.toString()
-                      : t('error_network');
                   return Center(
                     child: Padding(
                       padding: const EdgeInsets.all(24),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const Icon(Icons.wifi_off, size: 48),
+                          const Icon(Icons.error_outline, size: 48),
                           const SizedBox(height: 12),
-                          Text(msg, textAlign: TextAlign.center),
+                          Text(t('error_network'),
+                              textAlign: TextAlign.center),
                           const SizedBox(height: 16),
                           ElevatedButton.icon(
                             onPressed: _load,
@@ -207,38 +182,17 @@ class _HomeScreenState extends State<HomeScreen> {
                     final event = events[index];
 
                     if (index == 0) {
-                      // First card = featured (bigger)
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Padding(
-                            padding:
-                                const EdgeInsets.fromLTRB(16, 8, 16, 4),
-                            child: Text(
-                              t('featured'),
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleSmall
-                                  ?.copyWith(fontWeight: FontWeight.bold),
-                            ),
-                          ),
+                          _SectionHeader(text: t('featured')),
                           EventCard(
                             event: event,
                             featured: true,
                             onTap: () => _openDetails(context, event),
                           ),
                           if (events.length > 1)
-                            Padding(
-                              padding:
-                                  const EdgeInsets.fromLTRB(16, 12, 16, 4),
-                              child: Text(
-                                t('upcoming'),
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleSmall
-                                    ?.copyWith(fontWeight: FontWeight.bold),
-                              ),
-                            ),
+                            _SectionHeader(text: t('upcoming')),
                         ],
                       );
                     }
@@ -253,6 +207,25 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _SectionHeader extends StatelessWidget {
+  final String text;
+  const _SectionHeader({required this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
+      child: Text(
+        text,
+        style: Theme.of(context)
+            .textTheme
+            .titleSmall
+            ?.copyWith(fontWeight: FontWeight.bold),
       ),
     );
   }

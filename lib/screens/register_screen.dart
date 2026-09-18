@@ -87,7 +87,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       style:
                           const TextStyle(fontWeight: FontWeight.bold)),
                   subtitle: Text(
-                      '${event.formattedDate}  •  ${event.venue}'),
+                      '${event.formattedDate}  •  ${event.location}'),
                 ),
               ),
               const SizedBox(height: 24),
