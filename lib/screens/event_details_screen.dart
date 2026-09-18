@@ -73,9 +73,18 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
             expandedHeight: 300,
             pinned: true,
             backgroundColor: Colors.transparent,
+            leadingWidth: 72,
+            leading: Padding(
+              padding: const EdgeInsetsDirectional.only(start: 8),
+              child: IconButton.filledTonal(
+                icon: const BackButtonIcon(),
+                onPressed: () => Navigator.maybePop(context),
+                tooltip: MaterialLocalizations.of(context).backButtonTooltip,
+              ),
+            ),
             actions: [
               Padding(
-                padding: const EdgeInsets.only(right: 8),
+                padding: const EdgeInsetsDirectional.only(end: 8),
                 child: IconButton.filledTonal(
                   icon: Icon(
                     isFav ? Icons.favorite : Icons.favorite_border,
