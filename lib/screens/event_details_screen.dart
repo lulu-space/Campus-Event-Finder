@@ -10,6 +10,15 @@ import '../services/api_service.dart';
 import '../widgets/event_poster.dart';
 import 'register_screen.dart';
 
+const _circleIconStyle = ButtonStyle(
+  visualDensity: VisualDensity.compact,
+  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+  minimumSize: WidgetStatePropertyAll(Size(40, 40)),
+  maximumSize: WidgetStatePropertyAll(Size(40, 40)),
+  padding: WidgetStatePropertyAll(EdgeInsets.all(8)),
+  iconSize: WidgetStatePropertyAll(20),
+);
+
 class EventDetailsScreen extends StatefulWidget {
   final Event event;
 
@@ -73,10 +82,11 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
             expandedHeight: 300,
             pinned: true,
             backgroundColor: Colors.transparent,
-            leadingWidth: 72,
+            leadingWidth: 56,
             leading: Padding(
               padding: const EdgeInsetsDirectional.only(start: 8),
               child: IconButton.filledTonal(
+                style: _circleIconStyle,
                 icon: const BackButtonIcon(),
                 onPressed: () => Navigator.maybePop(context),
                 tooltip: MaterialLocalizations.of(context).backButtonTooltip,
@@ -86,6 +96,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
               Padding(
                 padding: const EdgeInsetsDirectional.only(end: 8),
                 child: IconButton.filledTonal(
+                  style: _circleIconStyle,
                   icon: Icon(
                     isFav ? Icons.favorite : Icons.favorite_border,
                     color: isFav ? const Color(0xFFFF6B8A) : null,
