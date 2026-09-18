@@ -13,11 +13,40 @@ import 'register_screen.dart';
 const _circleIconStyle = ButtonStyle(
   visualDensity: VisualDensity.compact,
   tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-  minimumSize: WidgetStatePropertyAll(Size(40, 40)),
-  maximumSize: WidgetStatePropertyAll(Size(40, 40)),
+  minimumSize: WidgetStatePropertyAll(Size.square(40)),
+  maximumSize: WidgetStatePropertyAll(Size.square(40)),
   padding: WidgetStatePropertyAll(EdgeInsets.all(8)),
   iconSize: WidgetStatePropertyAll(20),
+  fixedSize: WidgetStatePropertyAll(Size.square(40)),
 );
+
+class _CircleAppBarButton extends StatelessWidget {
+  final Widget icon;
+  final VoidCallback onPressed;
+  final String tooltip;
+
+  const _CircleAppBarButton({
+    required this.icon,
+    required this.onPressed,
+    required this.tooltip,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: SizedBox(
+        width: 40,
+        height: 40,
+        child: IconButton.filledTonal(
+          style: _circleIconStyle,
+          icon: icon,
+          onPressed: onPressed,
+          tooltip: tooltip,
+        ),
+      ),
+    );
+  }
+}
 
 class EventDetailsScreen extends StatefulWidget {
   final Event event;
@@ -85,9 +114,8 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
             leadingWidth: 56,
             leading: Padding(
               padding: const EdgeInsetsDirectional.only(start: 8),
-              child: IconButton.filledTonal(
-                style: _circleIconStyle,
-                icon: const BackButtonIcon(),
+              child: _CircleAppBarButton(
+                icon: const Icon(Icons.arrow_back, size: 20),
                 onPressed: () => Navigator.maybePop(context),
                 tooltip: MaterialLocalizations.of(context).backButtonTooltip,
               ),
@@ -95,10 +123,10 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
             actions: [
               Padding(
                 padding: const EdgeInsetsDirectional.only(end: 8),
-                child: IconButton.filledTonal(
-                  style: _circleIconStyle,
+                child: _CircleAppBarButton(
                   icon: Icon(
                     isFav ? Icons.favorite : Icons.favorite_border,
+                    size: 20,
                     color: isFav ? const Color(0xFFFF6B8A) : null,
                   ),
                   onPressed: () =>
