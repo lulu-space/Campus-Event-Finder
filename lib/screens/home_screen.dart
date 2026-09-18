@@ -7,7 +7,7 @@ import '../services/api_exception.dart';
 import '../services/api_service.dart';
 import '../services/location_query.dart';
 import '../widgets/event_card.dart';
-import 'event_details_screen.dart';
+import '../navigation/app_routes.dart';
 
 const List<String> _categories = [
   'All',
@@ -72,10 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _openDetails(BuildContext context, Event event) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (_) => EventDetailsScreen(event: event)),
-    );
+    Navigator.pushNamed(context, AppRoutes.details, arguments: event);
   }
 
   @override

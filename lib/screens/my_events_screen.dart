@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../navigation/app_routes.dart';
 import '../providers/language_provider.dart';
 import '../providers/registered_provider.dart';
 import '../widgets/event_poster.dart';
-import 'event_details_screen.dart';
 
 class MyEventsScreen extends StatelessWidget {
   const MyEventsScreen({super.key});
@@ -61,10 +61,10 @@ class MyEventsScreen extends StatelessWidget {
                         overflow: TextOverflow.ellipsis),
                     trailing: Icon(Icons.check_circle,
                         color: Theme.of(context).colorScheme.secondary),
-                    onTap: () => Navigator.push(
+                    onTap: () => Navigator.pushNamed(
                       context,
-                      MaterialPageRoute(
-                          builder: (_) => EventDetailsScreen(event: event)),
+                      AppRoutes.details,
+                      arguments: event,
                     ),
                   ),
                 );

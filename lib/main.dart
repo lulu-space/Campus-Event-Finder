@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'navigation/app_routes.dart';
 import 'providers/favorites_provider.dart';
 import 'providers/language_provider.dart';
 import 'providers/registered_provider.dart';
 import 'providers/theme_provider.dart';
-import 'screens/main_screen.dart';
+import 'services/database_init.dart';
+import 'services/local_storage_service.dart';
 import 'theme/app_theme.dart';
 import 'widgets/aura_background.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  initLocalDatabase();
+  await LocalStorageService.migrateLegacyListsIfNeeded();
 
-  // Load all persisted state before the first frame
   final themeProvider = ThemeProvider();
   final languageProvider = LanguageProvider();
   final favoritesProvider = FavoritesProvider();
@@ -53,8 +56,10 @@ class CampusEventFinderApp extends StatelessWidget {
       themeMode: themeMode,
       theme: AppTheme.light(),
       darkTheme: AppTheme.dark(),
-      builder: (context, child) => AuraBackground(child: child ?? const SizedBox()),
-      home: const MainScreen(),
+      builder: (context, child) =>
+          AuraBackground(child: child ?? const SizedBox()),
+      initialRoute: AppRoutes.home,
+      onGenerateRoute: onGenerateRoute,
     );
   }
 }

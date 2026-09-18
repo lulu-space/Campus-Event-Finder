@@ -8,7 +8,7 @@ import '../providers/language_provider.dart';
 import '../services/api_exception.dart';
 import '../services/api_service.dart';
 import '../widgets/event_poster.dart';
-import 'register_screen.dart';
+import '../navigation/app_routes.dart';
 
 const _circleIconStyle = ButtonStyle(
   visualDensity: VisualDensity.compact,
@@ -251,10 +251,10 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                     width: double.infinity,
                     child: FilledButton.icon(
                       onPressed: () {
-                        Navigator.push(
+                        Navigator.pushNamed(
                           context,
-                          MaterialPageRoute(
-                              builder: (_) => RegisterScreen(event: _event)),
+                          AppRoutes.register,
+                          arguments: _event,
                         );
                       },
                       icon: const Icon(Icons.app_registration),

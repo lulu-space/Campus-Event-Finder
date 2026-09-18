@@ -1,50 +1,90 @@
 import 'dart:convert';
+
+import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/event_model.dart';
+import 'event_database.dart';
 
-/// Persists favorites, registered events, theme mode, and language to device.
+/// Settings stay in SharedPreferences. Favorites and registrations use SQLite
+/// on mobile/desktop. Web has no SQLite plugin, so those lists use prefs there.
 class LocalStorageService {
   static const _keyFavorites = 'favorites';
   static const _keyRegistered = 'registered';
   static const _keyTheme = 'theme_mode';
   static const _keyLanguage = 'language';
 
-  // ── Favorites ──────────────────────────────────────────────────────────────
-
-  static Future<List<Event>> loadFavorites() async {
+  static Future<void> migrateLegacyListsIfNeeded() async {
+    if (kIsWeb) return;
     final prefs = await SharedPreferences.getInstance();
-    final raw = prefs.getStringList(_keyFavorites) ?? [];
+    await _migrateList(
+      prefs,
+      key: _keyFavorites,
+      existing: () => EventDatabase.instance.loadFavorites(),
+      save: EventDatabase.instance.saveFavorites,
+    );
+    await _migrateList(
+      prefs,
+      key: _keyRegistered,
+      existing: () => EventDatabase.instance.loadRegistered(),
+      save: EventDatabase.instance.saveRegistered,
+    );
+  }
+
+  static Future<void> _migrateList(
+    SharedPreferences prefs, {
+    required String key,
+    required Future<List<Event>> Function() existing,
+    required Future<void> Function(List<Event>) save,
+  }) async {
+    final raw = prefs.getStringList(key) ?? [];
+    if (raw.isEmpty) return;
+    if ((await existing()).isNotEmpty) {
+      await prefs.remove(key);
+      return;
+    }
+    final events = raw
+        .map((s) => Event.fromStoredJson(jsonDecode(s) as Map<String, dynamic>))
+        .toList();
+    await save(events);
+    await prefs.remove(key);
+  }
+
+  static Future<List<Event>> loadFavorites() {
+    if (kIsWeb) return _loadListFromPrefs(_keyFavorites);
+    return EventDatabase.instance.loadFavorites();
+  }
+
+  static Future<void> saveFavorites(List<Event> events) {
+    if (kIsWeb) return _saveListToPrefs(_keyFavorites, events);
+    return EventDatabase.instance.saveFavorites(events);
+  }
+
+  static Future<List<Event>> loadRegistered() {
+    if (kIsWeb) return _loadListFromPrefs(_keyRegistered);
+    return EventDatabase.instance.loadRegistered();
+  }
+
+  static Future<void> saveRegistered(List<Event> events) {
+    if (kIsWeb) return _saveListToPrefs(_keyRegistered, events);
+    return EventDatabase.instance.saveRegistered(events);
+  }
+
+  static Future<List<Event>> _loadListFromPrefs(String key) async {
+    final prefs = await SharedPreferences.getInstance();
+    final raw = prefs.getStringList(key) ?? [];
     return raw
-        .map((s) => Event.fromStoredJson(
-            jsonDecode(s) as Map<String, dynamic>))
+        .map((s) => Event.fromStoredJson(jsonDecode(s) as Map<String, dynamic>))
         .toList();
   }
 
-  static Future<void> saveFavorites(List<Event> events) async {
+  static Future<void> _saveListToPrefs(String key, List<Event> events) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setStringList(
-        _keyFavorites, events.map((e) => jsonEncode(e.toJson())).toList());
+      key,
+      events.map((e) => jsonEncode(e.toJson())).toList(),
+    );
   }
-
-  // ── Registered events ──────────────────────────────────────────────────────
-
-  static Future<List<Event>> loadRegistered() async {
-    final prefs = await SharedPreferences.getInstance();
-    final raw = prefs.getStringList(_keyRegistered) ?? [];
-    return raw
-        .map((s) => Event.fromStoredJson(
-            jsonDecode(s) as Map<String, dynamic>))
-        .toList();
-  }
-
-  static Future<void> saveRegistered(List<Event> events) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setStringList(
-        _keyRegistered, events.map((e) => jsonEncode(e.toJson())).toList());
-  }
-
-  // ── Theme ──────────────────────────────────────────────────────────────────
 
   static Future<String> loadTheme() async {
     final prefs = await SharedPreferences.getInstance();
@@ -55,8 +95,6 @@ class LocalStorageService {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_keyTheme, mode);
   }
-
-  // ── Language ───────────────────────────────────────────────────────────────
 
   static Future<String> loadLanguage() async {
     final prefs = await SharedPreferences.getInstance();

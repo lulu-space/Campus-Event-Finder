@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import '../providers/favorites_provider.dart';
 import '../providers/language_provider.dart';
 import '../widgets/event_card.dart';
-import 'event_details_screen.dart';
+import '../navigation/app_routes.dart';
 
 class FavoritesScreen extends StatelessWidget {
   const FavoritesScreen({super.key});
@@ -41,10 +41,10 @@ class FavoritesScreen extends StatelessWidget {
                 final event = favorites[index];
                 return EventCard(
                   event: event,
-                  onTap: () => Navigator.push(
+                  onTap: () => Navigator.pushNamed(
                     context,
-                    MaterialPageRoute(
-                        builder: (_) => EventDetailsScreen(event: event)),
+                    AppRoutes.details,
+                    arguments: event,
                   ),
                 );
               },
