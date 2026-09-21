@@ -33,6 +33,18 @@ Put your Consumer Key in `lib/services/api_config.dart`.
 
 Favorites count, registered events, dark/light theme, and Arabic/English.
 
+## App icon
+
+The launcher icon is `assets/app_icon.png` (calendar and location pin). Android, iOS, web, Windows, and macOS icons are generated from that file.
+
+After you replace the image, regenerate the platform icons:
+
+```powershell
+dart run flutter_launcher_icons
+```
+
+Stop the app and run it again. Hot reload does not change a launcher icon. On Chrome, hard-refresh the tab. On Windows, rebuild so the `.exe` picks up the new icon.
+
 ## Run
 
 ```powershell
