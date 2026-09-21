@@ -41,3 +41,13 @@ flutter run
 ```
 
 Try **United Kingdom** + city `London`, or **United States** + `New York`.
+
+### VS Code
+
+1. Install the **Flutter** extension (`Dart-Code.flutter`). It also installs Dart.
+2. Open this folder: **File → Open Folder**.
+3. Open a terminal (**View → Terminal**) and run `flutter pub get`.
+4. Pick a device in the bottom-right status bar: **Chrome** for a quick demo, or an **Android emulator / phone** to show SQLite.
+5. Press **F5** (or **Run → Start Debugging**), or run `flutter run` in the terminal.
+
+If Chrome opens a blank page, use `http://127.0.0.1:8080` (not `0.0.0.0`). Demo Day SQLite belongs on Android or desktop, not Chrome.
