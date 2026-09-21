@@ -60,6 +60,6 @@ Try **United Kingdom** + city `London`, or **United States** + `New York`.
 2. Open this folder: **File → Open Folder**.
 3. Open a terminal (**View → Terminal**) and run `flutter pub get`.
 4. Pick a device in the bottom-right status bar: **Chrome** for a quick demo, or an **Android emulator / phone** to show SQLite.
-5. Press **F5** (or **Run → Start Debugging**), or run `flutter run` in the terminal.
+5. Press **F5** and choose **Campus Event Finder**. That configuration is type `dart` and starts Flutter. The Chrome entry named **Launch Chrome against localhost** only opens a browser at port 8080 and does not start the app.
 
 If Chrome opens a blank page, use `http://127.0.0.1:8080` (not `0.0.0.0`). Demo Day SQLite belongs on Android or desktop, not Chrome.
