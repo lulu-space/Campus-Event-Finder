@@ -2,7 +2,11 @@
 
 Flutter graduation project by LAYAN DIAB (Al-Quds / Abu Dis).
 
-University students can discover campus events, save favorites, and register in one flow.
+University students can discover events, save favorites, and register in one flow. There is no login. Saved data stays on the device.
+
+## Tech stack
+
+Dart and Flutter. Live events come from the Ticketmaster Discovery API through the `http` package. Provider shares favorites, registrations, theme, and language. SQLite (`sqflite`) stores favorites and registrations. SharedPreferences stores theme and language.
 
 ## Screens
 
@@ -14,6 +18,8 @@ Home card → Details (Hero on the event image) → Register.
 
 Named routes: `/` Home, `/event` Details, `/register` Register.
 
+Home loads events with `FutureBuilder`: a spinner while the request runs, an error with Retry if it fails, and the event list when it arrives. The Register page is a `Form` that checks name, email, and student ID before saving.
+
 ## Live API
 
 [Ticketmaster Discovery API](https://developer.ticketmaster.com) — search events by **country** and optional **city** or **keyword**, then fetch event details by ID.
@@ -24,26 +30,16 @@ Ticketmaster does not cover every country. Places such as Palestine, France, or 
 
 Put your Consumer Key in `lib/services/api_config.dart`.
 
+Registering in the app saves the event on the device. It does not buy a Ticketmaster ticket.
+
 ## Saved locally
 
-- **SQLite:** favorites and registered events (main data) on Android, iOS, and desktop.
+- **SQLite:** favorites and registered events on Android, iOS, and desktop.
 - **SharedPreferences:** theme and language. On web, favorites and registrations also use SharedPreferences because the browser has no SQLite plugin.
 
 ## Shared state (Provider)
 
-Favorites count, registered events, dark/light theme, and Arabic/English.
-
-## App icon
-
-The launcher icon is `assets/app_icon.png` (calendar and location pin). Android, iOS, web, Windows, and macOS icons are generated from that file.
-
-After you replace the image, regenerate the platform icons:
-
-```powershell
-dart run flutter_launcher_icons
-```
-
-Stop the app and run it again. Hot reload does not change a launcher icon. On Chrome, hard-refresh the tab. On Windows, rebuild so the `.exe` picks up the new icon.
+Favorites count, registered events, dark/light theme, and Arabic/English. A change on one screen updates the others.
 
 ## Run
 
@@ -54,12 +50,4 @@ flutter run
 
 Try **United Kingdom** + city `London`, or **United States** + `New York`.
 
-### VS Code
-
-1. Install the **Flutter** extension (`Dart-Code.flutter`). It also installs Dart.
-2. Open this folder: **File → Open Folder**.
-3. Open a terminal (**View → Terminal**) and run `flutter pub get`.
-4. Pick a device in the bottom-right status bar: **Chrome** for a quick demo, or an **Android emulator / phone** to show SQLite.
-5. Press **F5** and choose **Campus Event Finder**. That configuration is type `dart` and starts Flutter. The Chrome entry named **Launch Chrome against localhost** only opens a browser at port 8080 and does not start the app.
-
-If Chrome opens a blank page, use `http://127.0.0.1:8080` (not `0.0.0.0`). Demo Day SQLite belongs on Android or desktop, not Chrome.
+Run on an Android phone or emulator to show SQLite. A browser demo stores the lists in SharedPreferences.

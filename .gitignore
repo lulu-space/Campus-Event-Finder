@@ -18,10 +18,8 @@ migrate_working_dir/
 *.iws
 .idea/
 
-# The .vscode folder contains launch configuration and tasks you configure in
-# VS Code which you may wish to be included in version control, so this line
-# is commented out by default.
-#.vscode/
+# Editor launch configs are local. The app runs with flutter pub get / flutter run.
+.vscode/
 
 # Flutter/Dart/Pub related
 **/doc/api/
