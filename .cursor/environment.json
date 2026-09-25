@@ -1,0 +1,15 @@
+{
+  "name": "Campus Event Finder",
+  "user": "ubuntu",
+  "install": "bash .cursor/install.sh",
+  "terminals": [
+    {
+      "name": "flutter-web",
+      "command": "$HOME/flutter/bin/flutter run -d web-server --web-port 8080 --web-hostname 0.0.0.0",
+      "description": "Serves the Campus Event Finder Flutter web app at http://localhost:8080 (hot reload with 'r', hot restart with 'R')."
+    }
+  ],
+  "ports": [
+    { "name": "flutter-web", "port": 8080 }
+  ]
+}
